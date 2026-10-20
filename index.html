@@ -5,6 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eagle Track GPS - Pro</title>
 
+    <!-- PWA / META / COMPARTIR POR WHATSAPP -->
+    <meta name="description" content="Eagle Track GPS - Rastreo y control de tu vehículo en tiempo real.">
+    <meta name="application-name" content="Eagle Track GPS">
+    <meta name="theme-color" content="#080705">
+    <meta name="color-scheme" content="dark">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Eagle Track">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-TileColor" content="#080705">
+    <meta name="msapplication-TileImage" content="https://cazcadena-cmd.github.io/EAGLETRACKGPSIPHONE/icon-192.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Eagle Track GPS">
+    <meta property="og:title" content="Eagle Track GPS">
+    <meta property="og:description" content="Rastreo y control de tu vehículo en tiempo real.">
+    <meta property="og:url" content="https://cazcadena-cmd.github.io/EAGLETRACKGPSIPHONE/">
+    <meta property="og:image" content="https://cazcadena-cmd.github.io/EAGLETRACKGPSIPHONE/icon-512.png">
+    <meta property="og:image:secure_url" content="https://cazcadena-cmd.github.io/EAGLETRACKGPSIPHONE/icon-512.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta property="og:image:alt" content="Eagle Track GPS">
+    <meta property="og:locale" content="es_ES">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Eagle Track GPS">
+    <meta name="twitter:description" content="Rastreo y control de tu vehículo en tiempo real.">
+    <meta name="twitter:image" content="https://cazcadena-cmd.github.io/EAGLETRACKGPSIPHONE/icon-512.png">
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
+
     <!-- LIBRERÍAS EXTERNAS AL PRINCIPIO -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.2/dist/maplibre-gl.css" />
@@ -229,6 +267,98 @@ html, body { width: 100%; height: 100%; min-width: 0; min-height: 0; margin: 0; 
     .recorridos-leyenda { display: none; }
     .recorridos-barra-estado { font-size: 9px; }
 }
+
+/* =====================================================================
+   NUEVO 1: BOTÓN POLÍTICAS (idéntico a Recorridos, ubicado encima)
+   ===================================================================== */
+#control-politicas { position: absolute; top: 305px; right: 15px; z-index: 10000; pointer-events: none; }
+@media (max-width: 600px) { #control-politicas { top: 305px; right: 10px; } }
+#btn-politicas { position: relative; }
+#btn-politicas::before { content: ''; position: absolute; inset: -2px; border: 2px solid #ff0000; border-radius: 12px; box-shadow: 0 0 10px #ff0000; opacity: 0; pointer-events: none; }
+#btn-politicas.politicas-ring { transform-origin: 50% 15%; animation: politicasRingRing 2.4s ease-in-out 1; }
+#btn-politicas.politicas-ring::before { animation: politicasOnda 2.4s ease-out 1; }
+@keyframes politicasRingRing {
+    0% { transform: rotate(0) scale(1); }
+    3% { transform: rotate(-16deg) scale(1.12); }
+    7% { transform: rotate(16deg) scale(1.12); }
+    11% { transform: rotate(-14deg) scale(1.12); }
+    15% { transform: rotate(14deg) scale(1.12); }
+    19% { transform: rotate(-9deg) scale(1.08); }
+    23% { transform: rotate(9deg) scale(1.08); }
+    27% { transform: rotate(0) scale(1); }
+    45% { transform: rotate(0) scale(1); }
+    48% { transform: rotate(-16deg) scale(1.12); }
+    52% { transform: rotate(16deg) scale(1.12); }
+    56% { transform: rotate(-14deg) scale(1.12); }
+    60% { transform: rotate(14deg) scale(1.12); }
+    64% { transform: rotate(-9deg) scale(1.08); }
+    68% { transform: rotate(9deg) scale(1.08); }
+    72% { transform: rotate(0) scale(1); }
+    100% { transform: rotate(0) scale(1); }
+}
+@keyframes politicasOnda {
+    0% { transform: scale(1); opacity: 0.95; }
+    30% { transform: scale(1.7); opacity: 0; }
+    31% { transform: scale(1); opacity: 0; }
+    45% { transform: scale(1); opacity: 0.95; }
+    75% { transform: scale(1.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 0; }
+}
+
+/* MODAL POLÍTICAS (contenido embebido) */
+#modal-politicas { padding: 0; background: #080705; z-index: 2000000; }
+.politicas-shell { position: fixed; inset: 0; display: flex; flex-direction: column; background: #080705; color: #e0e0e0; }
+.politicas-cabecera { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: calc(9px + env(safe-area-inset-top, 0px)) calc(10px + env(safe-area-inset-right, 0px)) 9px calc(12px + env(safe-area-inset-left, 0px)); background: rgba(10, 10, 10, 0.98); border-bottom: 1px solid rgba(255, 0, 0, 0.45); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.72); }
+.politicas-titulo { display: flex; align-items: center; gap: 8px; color: #ff0000; font-size: 15px; font-weight: bold; letter-spacing: 0.8px; min-width: 0; }
+.politicas-acciones { display: flex; align-items: center; gap: 7px; flex: 0 0 auto; }
+.politicas-externo, .politicas-cerrar { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; padding: 0; border: 1px solid rgba(255, 0, 0, 0.65); border-radius: 8px; background: #222; color: #ffffff; font-size: 14px; text-decoration: none; cursor: pointer; }
+.politicas-cerrar { font-size: 20px; line-height: 1; background: #9c0000; }
+.politicas-cuerpo { position: relative; flex: 1 1 auto; min-height: 0; background: #ffffff; overflow: hidden; }
+#politicas-iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; background: #ffffff; display: block; }
+.politicas-loading { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 11px; background: #080705; color: #ff4444; font-size: 12px; font-weight: bold; transition: opacity 0.3s ease, visibility 0.3s ease; }
+.politicas-loading.oculto { opacity: 0; visibility: hidden; pointer-events: none; }
+
+/* =====================================================================
+   NUEVO 2: MODAL ANIMADO DE INSTALACIÓN (PWA)
+   ===================================================================== */
+.pwa-overlay { display: none; position: fixed; inset: 0; z-index: 3000000; align-items: center; justify-content: center; padding: 16px; background: rgba(4, 3, 3, 0.86); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; transition: opacity 0.4s ease; }
+.pwa-overlay.activo { display: flex; }
+.pwa-overlay.visible { opacity: 1; }
+.pwa-card { position: relative; width: 100%; max-width: 360px; max-height: 94vh; overflow-y: auto; padding: 26px 22px 20px; border: 2px solid #ff0000; border-radius: 24px; background: radial-gradient(circle at 50% 0%, rgba(255, 0, 0, 0.22), transparent 55%), linear-gradient(160deg, #080705, #1a0d0d); color: #ffffff; text-align: center; box-shadow: 0 0 16px rgba(255, 0, 0, 0.6), 0 0 42px rgba(255, 0, 0, 0.3), 0 24px 60px rgba(0, 0, 0, 0.8); transform: translateY(80px) scale(0.7) rotateX(25deg); opacity: 0; }
+.pwa-overlay.visible .pwa-card { animation: pwaEntrada 0.85s cubic-bezier(0.2, 1.25, 0.4, 1) forwards, pwaBrillo 2.4s ease-in-out 0.9s infinite alternate; }
+.pwa-overlay.saliendo { opacity: 0; }
+.pwa-overlay.saliendo .pwa-card { animation: pwaSalida 0.45s ease-in forwards; }
+@keyframes pwaEntrada { 0% { transform: translateY(90px) scale(0.6) rotateX(30deg); opacity: 0; } 60% { transform: translateY(-10px) scale(1.04) rotateX(0); opacity: 1; } 100% { transform: translateY(0) scale(1) rotateX(0); opacity: 1; } }
+@keyframes pwaSalida { from { transform: translateY(0) scale(1); opacity: 1; } to { transform: translateY(60px) scale(0.8); opacity: 0; } }
+@keyframes pwaBrillo { from { box-shadow: 0 0 10px rgba(255, 0, 0, 0.5), 0 0 28px rgba(255, 0, 0, 0.2), 0 24px 60px rgba(0, 0, 0, 0.8); } to { box-shadow: 0 0 20px rgba(255, 0, 0, 0.95), 0 0 56px rgba(255, 0, 0, 0.45), 0 24px 60px rgba(0, 0, 0, 0.8); } }
+.pwa-icono-wrap { position: relative; width: 92px; height: 92px; margin: 0 auto 14px; }
+.pwa-icono-wrap::before, .pwa-icono-wrap::after { content: ''; position: absolute; inset: 0; border: 2px solid #ff0000; border-radius: 24px; opacity: 0; animation: pwaOnda 2.4s ease-out infinite; }
+.pwa-icono-wrap::after { animation-delay: 1.2s; }
+@keyframes pwaOnda { 0% { transform: scale(1); opacity: 0.85; } 100% { transform: scale(1.9); opacity: 0; } }
+.pwa-icono { position: relative; z-index: 2; width: 92px; height: 92px; border: 2px solid #ff0000; border-radius: 22px; object-fit: cover; background: #080705; box-shadow: 0 0 18px rgba(255, 0, 0, 0.7); animation: pwaFlotar 2.8s ease-in-out infinite; }
+@keyframes pwaFlotar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.pwa-titulo { margin: 0 0 6px; color: #ff0000; font-size: 18px; font-weight: bold; letter-spacing: 0.8px; text-transform: uppercase; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
+.pwa-subtitulo { margin: 0 0 16px; color: #d6d6d6; font-size: 12.5px; line-height: 1.45; }
+.pwa-pasos { margin: 0 0 14px; padding: 0; list-style: none; text-align: left; }
+.pwa-paso { display: flex; align-items: center; gap: 11px; margin-bottom: 9px; padding: 10px 11px; border: 1px solid rgba(255, 0, 0, 0.35); border-radius: 12px; background: rgba(0, 0, 0, 0.45); opacity: 0; transform: translateX(-26px); }
+.pwa-overlay.visible .pwa-paso { animation: pwaPaso 0.55s ease-out forwards; }
+.pwa-overlay.visible .pwa-paso:nth-child(1) { animation-delay: 0.55s; }
+.pwa-overlay.visible .pwa-paso:nth-child(2) { animation-delay: 0.8s; }
+.pwa-overlay.visible .pwa-paso:nth-child(3) { animation-delay: 1.05s; }
+@keyframes pwaPaso { to { opacity: 1; transform: translateX(0); } }
+.pwa-num { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: #ff0000; color: #ffffff; font-size: 13px; font-weight: bold; box-shadow: 0 0 10px rgba(255, 0, 0, 0.7); }
+.pwa-paso-texto { flex: 1 1 auto; color: #ffffff; font-size: 12px; line-height: 1.35; }
+.pwa-paso-texto strong { color: #ff4444; }
+.pwa-paso-icono { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 8px; background: #1b1b1d; }
+.pwa-paso-icono svg { width: 19px; height: 19px; stroke: #4da3ff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.pwa-flecha { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 2px 0 14px; color: #ff4444; font-size: 11px; font-weight: bold; letter-spacing: 0.3px; }
+.pwa-flecha i { font-size: 18px; animation: pwaRebote 1s ease-in-out infinite; }
+@keyframes pwaRebote { 0%, 100% { transform: translateY(-3px); } 50% { transform: translateY(5px); } }
+.pwa-botones { display: flex; flex-direction: column; gap: 9px; }
+.pwa-btn-aceptar, .pwa-btn-ahora { width: 100%; padding: 13px 16px; border: none; border-radius: 12px; font-family: inherit; font-size: 14px; font-weight: bold; letter-spacing: 0.6px; cursor: pointer; transition: transform 0.12s ease, opacity 0.2s ease; }
+.pwa-btn-aceptar { border: 1px solid #ff5a5a; background: linear-gradient(135deg, #8f0000, #ff0000); color: #ffffff; box-shadow: 0 0 14px rgba(255, 0, 0, 0.6); }
+.pwa-btn-ahora { border: 1px solid rgba(255, 0, 0, 0.4); background: #252525; color: #ffffff; }
+.pwa-btn-aceptar:active, .pwa-btn-ahora:active { transform: scale(0.96); }
 </style>
 </head>
 <body>
@@ -287,6 +417,7 @@ html, body { width: 100%; height: 100%; min-width: 0; min-height: 0; margin: 0; 
         <button onclick="abrirStreetView()" class="btn-actualizar" title="Street View"><i class="fas fa-street-view"></i><span>Street View</span></button>
         <button onclick="abrirModalNotificaciones()" class="btn-actualizar" title="Alertas" aria-label="Alertas"><i class="fas fa-bell"></i><span>Alertas</span></button>
     </div>
+    <div id="control-politicas"><button id="btn-politicas" onclick="abrirPoliticas()" class="btn-actualizar" title="Políticas" aria-label="Políticas"><i class="fas fa-shield-alt"></i><span>Políticas</span></button></div>
     <div id="control-recorridos"><button onclick="abrirModalRecorridos()" class="btn-actualizar" title="Recorridos" aria-label="Recorridos"><i class="fas fa-route"></i><span>Recorridos</span></button></div>
     <pre id="resultado"></pre>
 </div>
@@ -303,6 +434,54 @@ html, body { width: 100%; height: 100%; min-width: 0; min-height: 0; margin: 0; 
 <div id="modal-notificaciones" class="modal-overlay"><div class="modal-box" style="max-width: 440px; max-height: 88vh; overflow-y: auto;"><h3><i class="fas fa-bell"></i> ALERTAS GPS</h3><div style="text-align: left; margin-bottom: 16px; border-bottom: 1px solid rgba(255,0,0,0.35); padding-bottom: 12px;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"><strong style="color: #ff0000; font-size: 14px;"><i class="fas fa-list-alt"></i> Alertas Registradas</strong><button onclick="cargarNotificacionesRegistradas()" style="background: transparent; border: 1px solid rgba(255,0,0,0.5); color: #ff0000; border-radius: 4px; padding: 3px 7px; font-size: 10px; cursor: pointer;"><i class="fas fa-sync-alt"></i> Actualizar</button></div><div id="lista-notificaciones-servidor" style="max-height: 190px; overflow-y: auto; font-size: 12px;"><p style="color: #888;">Cargando reglas Web...</p></div></div><div style="background: rgba(255, 0, 0, 0.08); border: 1px solid rgba(255, 0, 0, 0.4); border-radius: 12px; padding: 12px; margin-bottom: 16px; text-align: left;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;"><strong style="color: #fff; font-size: 13px;"><i class="fas fa-desktop" style="color: #ff0000; margin-right: 4px;"></i> Canal Web</strong><span id="notif-estado-badge" class="notif-badge-estado notif-badge-default">Verificando</span></div><p style="font-size: 11px; color: #ccc; margin: 4px 0 10px 0; line-height: 1.3;">Las alertas Web son generadas por el servidor y aparecen dentro de Eagle Track GPS mientras esta cuenta está conectada.</p><div id="notif-estado-detalle" class="notif-estado-detalle">Verificando si el canal Web está habilitado...</div><div><button id="btn-probar-web" type="button" class="btn-cancelar" onclick="probarCanalNativo('web')" style="padding: 9px; font-size: 11px; margin-bottom: 0;"><i class="fas fa-desktop"></i> Probar Web</button></div></div><div style="text-align: left; margin-bottom: 16px; border-bottom: 1px solid rgba(255,0,0,0.3); padding-bottom: 12px;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"><strong style="color: #ff0000; font-size: 14px;"><i class="fas fa-plus-circle"></i> Nueva Regla de Alerta</strong><button type="button" onclick="cargarCanalesDisponibles(true)" style="background: transparent; border: 1px solid rgba(255, 0, 0, 0.5); color: #ff0000; border-radius: 4px; padding: 2px 6px; font-size: 10px; cursor: pointer;"><i class="fas fa-sync-alt"></i> Verificar canal</button></div><label><i class="fas fa-bolt" style="color: #ff0000;"></i> Tipo de Evento / Alerta:</label><select id="notif-tipo" onchange="actualizarDescripcionTipoNotificacion()" style="margin-bottom: 6px;"><option value="ignitionOn">Ignición ON (Motor Encendido)</option><option value="ignitionOff">Ignición OFF (Motor Apagado)</option><option value="deviceMoving">Vehículo en Movimiento</option><option value="deviceStopped">Vehículo Detenido</option><option value="deviceOverspeed">Exceso de Límite de Velocidad</option><option value="geofenceEnter">Entrada a Geocerca / Zona</option><option value="geofenceExit">Salida de Geocerca / Zona</option><option value="alarm">Alarma SOS / Pánico / Desconexión</option><option value="deviceOnline">Dispositivo En Línea (Señal GPS OK)</option><option value="deviceOffline">Dispositivo Fuera de Línea (Sin Señal)</option><option value="allEvents">Todos los Eventos</option></select><div id="notif-tipo-desc" class="notif-desc-box">Se enviará una alerta en tiempo real cada vez que la llave de contacto sea activada o el motor sea encendido.</div><div id="notif-extras-velocidad" style="display:none; margin-bottom: 10px;"><label><i class="fas fa-tachometer-alt" style="color:#ff0000;"></i> Límite de Velocidad (km/h):</label><input type="number" id="notif-limite-vel" placeholder="Ej: 80" value="80" min="10" max="250" style="margin-bottom: 5px;"></div><label><i class="fas fa-broadcast-tower" style="color: #ff0000;"></i> Canal de Envío:</label><div style="background: #000; border: 1px solid rgba(255,0,0,0.3); border-radius: 8px; padding: 8px; margin-bottom: 12px;"><label class="notif-canal-item" data-channel="web" style="margin-bottom: 0;"><input type="checkbox" id="notif-canal-web" checked><span><strong>Web</strong> (Aviso visible en la interfaz web conectada)</span></label></div><label class="notif-canal-item" style="margin-bottom: 14px; background: #151515;"><input type="checkbox" id="notif-always" checked><span><strong>Siempre activo:</strong> aplicar la regla sin depender de un calendario</span></label><button id="btn-guardar-alerta" class="btn-descargar" onclick="guardarNotificacionEagleTrack()"><i class="fas fa-save"></i> GUARDAR Y ACTIVAR ALERTA EN SERVIDOR</button></div><button class="btn-cancelar" onclick="cerrarModales()" style="margin-top: 15px;">CERRAR</button></div></div>
 
 <div id="modal-recorridos" class="modal-overlay"><div class="recorridos-shell"><div id="mapa-recorrido"></div><div class="recorridos-panel-superior"><div class="recorridos-cabecera"><div class="recorridos-titulo"><i class="fas fa-route"></i><span>RECORRIDO DEL VEHÍCULO</span></div><div class="recorridos-acciones"><button class="recorridos-buscar" onclick="cargarRecorridoModal()"><i class="fas fa-search"></i> BUSCAR</button><button class="recorridos-cerrar" onclick="cerrarModalRecorridos()" aria-label="Cerrar recorridos">×</button></div></div><div class="recorridos-controles"><div class="recorridos-grupo"><label for="recorrido-vehiculo"><i class="fas fa-car" style="color:#ff4444;"></i> Vehículo</label><select id="recorrido-vehiculo"><option value="">Cargando...</option></select></div><div class="recorridos-grupo"><label for="recorrido-desde"><i class="fas fa-calendar-alt" style="color:#ff4444;"></i> Desde</label><input type="datetime-local" id="recorrido-desde"></div><div class="recorridos-grupo"><label for="recorrido-hasta"><i class="fas fa-calendar-alt" style="color:#ff4444;"></i> Hasta</label><input type="datetime-local" id="recorrido-hasta"></div></div></div><div class="recorridos-leyenda"><strong style="color:#ff0000;"><i class="fas fa-info-circle"></i> Leyenda</strong><div class="recorridos-leyenda-item"><span class="recorridos-punto-leyenda" style="background:#00ff66;"></span> Movimiento</div><div class="recorridos-leyenda-item"><span class="recorridos-punto-leyenda" style="background:#ffaa00;"></span> Detenido</div><div class="recorridos-leyenda-item"><span class="recorridos-punto-leyenda" style="background:#ff4444;"></span> Apagado</div><div class="recorridos-leyenda-item"><span style="width:12px;height:3px;background:#ff0000;"></span> Ruta</div></div><div class="recorridos-barra-estado"><span id="recorrido-stat-izq">Sin datos cargados</span><span id="recorrido-stat-der"></span></div><div id="recorrido-loading" class="recorridos-loading"><div class="recorridos-spinner"></div><div id="recorrido-loading-text" style="color:#ff4444;font-size:12px;font-weight:bold;">Cargando recorrido...</div></div><div id="recorrido-mensaje" class="recorridos-mensaje"><div class="recorridos-mensaje-box"><h3 style="color:#ff0000;margin-bottom:10px;"><i class="fas fa-bell"></i> Notificación</h3><p id="recorrido-mensaje-texto"></p><button onclick="cerrarMensajeRecorrido()">ACEPTAR</button></div></div></div></div>
+
+<!-- MODAL POLÍTICAS (contenido embebido) -->
+<div id="modal-politicas" class="modal-overlay">
+    <div class="politicas-shell">
+        <div class="politicas-cabecera">
+            <div class="politicas-titulo"><i class="fas fa-shield-alt"></i><span>POLÍTICAS</span></div>
+            <div class="politicas-acciones">
+                <a class="politicas-externo" href="https://whitecarappcelphone-sys.github.io/EAGLETRACKGPS/" target="_blank" rel="noopener" title="Abrir en el navegador" aria-label="Abrir en el navegador"><i class="fas fa-external-link-alt"></i></a>
+                <button class="politicas-cerrar" onclick="cerrarPoliticas()" aria-label="Cerrar políticas">×</button>
+            </div>
+        </div>
+        <div class="politicas-cuerpo">
+            <iframe id="politicas-iframe" title="Políticas Eagle Track GPS" referrerpolicy="no-referrer-when-downgrade" allow="fullscreen"></iframe>
+            <div id="politicas-loading" class="politicas-loading"><div class="recorridos-spinner"></div><div>Cargando políticas...</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ANIMADO: INSTALAR APP -->
+<div id="pwa-instalar" class="pwa-overlay" role="dialog" aria-modal="true" aria-labelledby="pwa-titulo">
+    <div class="pwa-card">
+        <div class="pwa-icono-wrap"><img class="pwa-icono" src="icon-192.png" alt="Eagle Track GPS"></div>
+        <h2 id="pwa-titulo" class="pwa-titulo">Instala Eagle Track GPS</h2>
+        <p class="pwa-subtitulo">Lleva tu GPS en el iPhone como una app: acceso directo desde tu pantalla de inicio y a pantalla completa.</p>
+        <ol class="pwa-pasos">
+            <li class="pwa-paso">
+                <span class="pwa-num">1</span>
+                <span class="pwa-paso-texto">Toca el botón <strong>Compartir</strong> en la barra de Safari.</span>
+                <span class="pwa-paso-icono"><svg viewBox="0 0 24 24"><path d="M12 15V3"/><path d="M8 7l4-4 4 4"/><path d="M5 11H4a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/></svg></span>
+            </li>
+            <li class="pwa-paso">
+                <span class="pwa-num">2</span>
+                <span class="pwa-paso-texto">Desliza y elige <strong>“Agregar a inicio”</strong>.</span>
+                <span class="pwa-paso-icono"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8"/><path d="M8 12h8"/></svg></span>
+            </li>
+            <li class="pwa-paso">
+                <span class="pwa-num">3</span>
+                <span class="pwa-paso-texto">Toca <strong>“Agregar”</strong> y abre Eagle Track GPS desde tu inicio.</span>
+                <span class="pwa-paso-icono"><img src="icon-192.png" alt="" style="width:26px;height:26px;border-radius:6px;"></span>
+            </li>
+        </ol>
+        <div class="pwa-flecha"><i class="fas fa-arrow-down"></i><span>El botón Compartir está en la barra inferior de Safari</span><i class="fas fa-arrow-down"></i></div>
+        <div class="pwa-botones">
+            <button type="button" id="pwa-btn-aceptar" class="pwa-btn-aceptar">ACEPTAR</button>
+            <button type="button" id="pwa-btn-ahora" class="pwa-btn-ahora">AHORA NO</button>
+        </div>
+    </div>
+</div>
 
 <script>
     const videoIntro = document.querySelector('#intro-video video');
@@ -980,6 +1159,168 @@ html, body { width: 100%; height: 100%; min-width: 0; min-height: 0; margin: 0; 
     function actualizarEstadoRecorrido(total, movimiento, detenidos, encendidos) { const izquierda = document.getElementById('recorrido-stat-izq'); const derecha = document.getElementById('recorrido-stat-der'); if (!total) { izquierda.textContent = 'Sin datos cargados'; derecha.textContent = ''; return; } izquierda.innerHTML = `<span class="recorridos-stat">${total}</span> puntos · <span style="color:#00ff66;">${movimiento}</span> mov · <span style="color:#ffaa00;">${detenidos}</span> det`; derecha.innerHTML = `<i class="fas fa-key" style="color:#ffaa00;"></i> <span class="recorridos-stat">${encendidos}</span> enc`; }
 
     console.log('EAGLE TRACK GPS CARGADO CORRECTAMENTE');
+</script>
+
+<!-- =====================================================================
+     NUEVO: POLÍTICAS + INSTALACIÓN PWA + SERVICE WORKER + SPLASH iOS
+     (bloque independiente; no altera la lógica original)
+     ===================================================================== -->
+<script>
+(function () {
+    const URL_POLITICAS = 'https://whitecarappcelphone-sys.github.io/EAGLETRACKGPS/';
+    const CLAVE_POLITICAS_VISTAS = 'eagle_politicas_vistas';
+    const CLAVE_PWA_INSTALADA = 'eagle_pwa_instalada';
+
+    function leerFlag(clave) { try { return localStorage.getItem(clave) === '1'; } catch (e) { return false; } }
+    function guardarFlag(clave) { try { localStorage.setItem(clave, '1'); } catch (e) {} }
+
+    function esStandalone() {
+        return window.navigator.standalone === true ||
+            (window.matchMedia && (window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches));
+    }
+
+    /* ---------- POLÍTICAS ---------- */
+    window.abrirPoliticas = function () {
+        // Tras presionarlo, la animación no vuelve a ocurrir nunca más
+        guardarFlag(CLAVE_POLITICAS_VISTAS);
+        const boton = document.getElementById('btn-politicas');
+        if (boton) boton.classList.remove('politicas-ring');
+
+        if (typeof cerrarModales === 'function') cerrarModales();
+        const modal = document.getElementById('modal-politicas');
+        const iframe = document.getElementById('politicas-iframe');
+        const carga = document.getElementById('politicas-loading');
+        modal.style.display = 'flex';
+
+        if (!iframe.getAttribute('src')) {
+            carga.classList.remove('oculto');
+            const ocultarCarga = () => carga.classList.add('oculto');
+            iframe.addEventListener('load', ocultarCarga, { once: true });
+            setTimeout(ocultarCarga, 12000);
+            iframe.setAttribute('src', URL_POLITICAS);
+        }
+    };
+
+    window.cerrarPoliticas = function () {
+        document.getElementById('modal-politicas').style.display = 'none';
+    };
+
+    /* ---------- MODAL DE INSTALACIÓN ---------- */
+    const modalPwa = document.getElementById('pwa-instalar');
+    let promptInstalacion = null;
+    let modalPwaProgramado = false;
+    let modalPwaAbierto = false;
+    let ringIniciado = false;
+
+    if (esStandalone()) guardarFlag(CLAVE_PWA_INSTALADA);
+
+    window.addEventListener('beforeinstallprompt', evento => { evento.preventDefault(); promptInstalacion = evento; });
+    window.addEventListener('appinstalled', () => { guardarFlag(CLAVE_PWA_INSTALADA); cerrarModalPwa(); });
+
+    function debeMostrarInstalacion() {
+        return !esStandalone() && !leerFlag(CLAVE_PWA_INSTALADA);
+    }
+
+    function abrirModalPwa() {
+        modalPwaAbierto = true;
+        modalPwa.classList.add('activo');
+        void modalPwa.offsetWidth;
+        requestAnimationFrame(() => modalPwa.classList.add('visible'));
+    }
+
+    function cerrarModalPwa() {
+        if (!modalPwa.classList.contains('activo')) { modalPwaAbierto = false; return; }
+        modalPwa.classList.add('saliendo');
+        setTimeout(() => {
+            modalPwa.classList.remove('activo', 'visible', 'saliendo');
+            modalPwaAbierto = false;
+        }, 480);
+    }
+
+    document.getElementById('pwa-btn-ahora').addEventListener('click', cerrarModalPwa);
+    document.getElementById('pwa-btn-aceptar').addEventListener('click', async () => {
+        if (promptInstalacion) {
+            try {
+                promptInstalacion.prompt();
+                const eleccion = await promptInstalacion.userChoice;
+                if (eleccion && eleccion.outcome === 'accepted') guardarFlag(CLAVE_PWA_INSTALADA);
+            } catch (e) {}
+            promptInstalacion = null;
+        }
+        cerrarModalPwa();
+    });
+
+    /* ---------- COORDINACIÓN: después del video intro ---------- */
+    function introTerminada() {
+        const intro = document.getElementById('intro-video');
+        return !intro || window.getComputedStyle(intro).display === 'none';
+    }
+    function mapaVisible() {
+        const pantalla = document.getElementById('pantalla-mapa');
+        return !!pantalla && window.getComputedStyle(pantalla).display !== 'none';
+    }
+
+    const vigilante = setInterval(() => {
+        if (!introTerminada()) return;
+
+        if (!modalPwaProgramado) {
+            modalPwaProgramado = true;
+            if (debeMostrarInstalacion()) {
+                modalPwaAbierto = true;
+                setTimeout(abrirModalPwa, 400);
+            }
+        }
+
+        // Animación RING RING del botón Políticas: una sola vez, cuando no hay modal encima
+        if (!ringIniciado && !modalPwaAbierto && mapaVisible()) {
+            ringIniciado = true;
+            if (!leerFlag(CLAVE_POLITICAS_VISTAS)) {
+                const boton = document.getElementById('btn-politicas');
+                if (boton) {
+                    boton.addEventListener('animationend', evento => {
+                        if (evento.target === boton) boton.classList.remove('politicas-ring');
+                    });
+                    boton.classList.add('politicas-ring');
+                }
+            }
+            clearInterval(vigilante);
+        }
+    }, 400);
+
+    /* ---------- SERVICE WORKER ---------- */
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js', { scope: './' }).catch(error => console.warn('Service Worker no registrado:', error));
+        });
+    }
+
+    /* ---------- SPLASH SCREEN iOS (fondo #080705 + icono) ---------- */
+    (function crearSplashIOS() {
+        const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        if (!esIOS) return;
+        const imagen = new Image();
+        imagen.onload = () => {
+            try {
+                const ratio = window.devicePixelRatio || 1;
+                const ancho = screen.width, alto = screen.height;
+                const lienzo = document.createElement('canvas');
+                lienzo.width = Math.round(ancho * ratio);
+                lienzo.height = Math.round(alto * ratio);
+                const ctx = lienzo.getContext('2d');
+                ctx.fillStyle = '#080705';
+                ctx.fillRect(0, 0, lienzo.width, lienzo.height);
+                const lado = Math.round(Math.min(lienzo.width, lienzo.height) * 0.34);
+                ctx.drawImage(imagen, (lienzo.width - lado) / 2, (lienzo.height - lado) / 2, lado, lado);
+                const enlace = document.createElement('link');
+                enlace.rel = 'apple-touch-startup-image';
+                enlace.media = `(device-width: ${ancho}px) and (device-height: ${alto}px) and (-webkit-device-pixel-ratio: ${ratio}) and (orientation: portrait)`;
+                enlace.href = lienzo.toDataURL('image/png');
+                document.head.appendChild(enlace);
+            } catch (e) { /* sin splash personalizado */ }
+        };
+        imagen.src = 'icon-512.png';
+    })();
+})();
 </script>
 </body>
 </html>
